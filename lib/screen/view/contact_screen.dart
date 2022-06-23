@@ -1,6 +1,8 @@
 import 'dart:io';
 
-import 'package:contactdiary/screen/view/dialogbox.dart';
+
+
+import 'package:contactdiary/screen/modal/modalclass.dart';
 import 'package:contactdiary/utilis/constant/components/sizedbox.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -95,8 +97,7 @@ class _contact_screenState extends State<contact_screen> {
                                                         source: ImageSource
                                                             .gallery);
                                                 setState(() {
-                                                  img_path =
-                                                      photo!.path as File;
+                                                  path = photo!.path as File;
                                                 });
                                               },
                                               child: Container(
@@ -104,11 +105,12 @@ class _contact_screenState extends State<contact_screen> {
                                                 width: 85,
                                                 child: CircleAvatar(
                                                   backgroundImage:
-                                                      FileImage(img_path),
+                                                      FileImage(path),
                                                 ),
                                               ),
                                             ),
                                             TextFormField(
+                                              controller: txt_Name,
                                               decoration: InputDecoration(
                                                   hintText: "Enter Person Name",
                                                   enabledBorder:
@@ -119,7 +121,7 @@ class _contact_screenState extends State<contact_screen> {
                                                   ),
                                                   focusedBorder:
                                                       OutlineInputBorder(
-                                                    borderSide: BorderSide(
+                                                      borderSide: BorderSide(
                                                         color: Colors.black,
                                                         width: 2),
                                                   ),
@@ -136,7 +138,9 @@ class _contact_screenState extends State<contact_screen> {
                                                   )),
                                             ),
                                             TextFormField(
+                                              controller: txt_Num,
                                               decoration: InputDecoration(
+
                                                   hintText:
                                                       "Enter Mobile Number",
                                                   enabledBorder:
@@ -163,6 +167,19 @@ class _contact_screenState extends State<contact_screen> {
                                                     color: Colors.black,
                                                   )),
                                             ),
+                                            H(10),
+                                            Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                              children: [
+                                                ElevatedButton(onPressed: (){
+                                                  Navigator.pop(context,'/');
+                                                }, child: Text("back"),style: ElevatedButton.styleFrom(primary: Colors.black),),
+                                                ElevatedButton(onPressed: (){
+                                                  Name = txt_Name.text;
+                                                  Number = txt_Num.text;
+                                                  modelClass detail = modelClass(path , Number, Name);
+                                                }, child: Text("Next"),style: ElevatedButton.styleFrom(primary: Colors.black),),
+                                              ],
+                                            )
                                           ],
                                         ),
                                         backgroundColor: Colors.white,

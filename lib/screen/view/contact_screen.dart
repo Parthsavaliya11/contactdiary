@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class contact_screen extends StatefulWidget {
   const contact_screen({Key? key}) : super(key: key);
@@ -17,9 +18,10 @@ class _contact_screenState extends State<contact_screen> {
         appBar: AppBar(
           backgroundColor: Colors.black,
           title: Text(
-            "Contact Diary App",
-            style: TextStyle( fontFamily: 'Cinzel', ),
+            'Contact Diary App',
+            style: GoogleFonts.cinzel(fontWeight: FontWeight.bold,fontSize: 25),
           ),
+
           centerTitle: true,
           actions: [
             PopupMenuButton(

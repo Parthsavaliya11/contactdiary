@@ -1,11 +1,13 @@
+import 'package:contactdiary/screen/modal/modalclass.dart';
+import 'package:contactdiary/utilis/constant/components/sizedbox.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-Widget List_wid() {
-  return ListView.builder(shrinkWrap: true,itemBuilder: (context, index) {
-    return Container(
-      height: 100,
-      width: 100,
-      color: Colors.black,
-    );
-  });
-}
+List c1 = [
+  Colors.orange,
+  Colors.blueAccent,
+  Colors.yellowAccent,
+  Colors.blueAccent
+];
+
+

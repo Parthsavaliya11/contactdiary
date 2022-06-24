@@ -7,6 +7,7 @@ import 'package:contactdiary/screen/controller/listview.dart';
 import 'package:contactdiary/screen/modal/modalclass.dart';
 import 'package:contactdiary/utilis/constant/components/sizedbox.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -129,6 +130,9 @@ class _contact_screenState extends State<contact_screen> {
                               )),
                         ),
                         TextFormField(
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          maxLength: 10,
                           controller: txt_Num,
                           decoration: InputDecoration(
 
@@ -167,7 +171,7 @@ class _contact_screenState extends State<contact_screen> {
                             ElevatedButton(onPressed: (){
                               Name = txt_Name.text;
                               Number = txt_Num.text;
-                              modelClass detail = modelClass(path, Number, Name);
+                              Navigator.pop(context,'/');
                             }, child: Text("Next"),style: ElevatedButton.styleFrom(primary: Colors.black),),
                           ],
                         ),
@@ -183,8 +187,35 @@ class _contact_screenState extends State<contact_screen> {
           key: keys,
           child: Container(
             child: Column(children: [
+              ListView.builder(
+                shrinkWrap: true, // and use shrinkWrap
+                itemCount: Name?.length,
+                padding: EdgeInsets.only(top: 10, bottom: 10),
+                itemBuilder: (context, index) {
+                  return Card(
+                    child: Container(
+                      height: 70,
+                      color: Colors.black,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                  height: 50,
+                                  width: 50,
+                                  child: CircleAvatar()),
+                            ),
 
-            ]),
+                            Text('$Name',style: GoogleFonts.poppins(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 20),),
+                            Text('$Number',style: GoogleFonts.poppins(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 20),),
+                          ]),
+                    ),
+                  );
+                },
+              ),
+            ],
+            ),
       ),
     ),
    ),

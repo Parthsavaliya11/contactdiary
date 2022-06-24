@@ -1,8 +1,5 @@
 import 'dart:io';
 
-
-
-
 import 'package:contactdiary/screen/controller/listview.dart';
 import 'package:contactdiary/screen/modal/modalclass.dart';
 import 'package:contactdiary/utilis/constant/components/sizedbox.dart';
@@ -23,11 +20,13 @@ class _contact_screenState extends State<contact_screen> {
   String Selected = "";
   TextEditingController txt_Name = TextEditingController();
   TextEditingController txt_Num = TextEditingController();
-  String? Number;
-  String? Name;
-  Key keys = GlobalKey();
-  ImagePicker imagepick = ImagePicker();
+  List<String> Name =[];
+  List<String> Number =[];
+  var keys = GlobalKey<FormState>();
+  var ke = GlobalKey<FormState>();
+
   File path = File("");
+  File new_path = File("");
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -64,161 +63,207 @@ class _contact_screenState extends State<contact_screen> {
             ),
           ],
         ),
-
-        floatingActionButton: FloatingActionButton(backgroundColor: Colors.black,child: Icon(Icons.add),onPressed: () {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return Padding(
-                  padding: const EdgeInsets.all(80),
-                  child: AlertDialog(
-                    title: Center(
-                      child: Text(
-                        "Enter Person Detail",
-                        style: GoogleFonts.montserrat(fontWeight: FontWeight.bold,fontSize: 20),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.black,
+          child: Icon(Icons.add),
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return Form(
+                    key: keys,
+                    child: AlertDialog(
+                      title: Center(
+                        child: Text(
+                          "Enter Person Detail",
+                          style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
                       ),
+                      content: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            H(40),
+                            GestureDetector(
+                              onTap: () async {
+                                ImagePicker imagepick = ImagePicker();
+
+                                XFile? photo = await imagepick.pickImage(
+                                    source: ImageSource.gallery);
+                                setState(() {
+                                  path.delete();
+                                  path = File(photo!.path);
+                                });
+                              },
+                              child: Container(
+                                height: 130,
+                                width: 130,
+                                child: CircleAvatar(
+                                  backgroundImage: FileImage(path),
+                                ),
+                              ),
+                            ),
+                            H(40),
+                            TextFormField(
+                              controller: txt_Name,
+                              decoration: InputDecoration(
+                                  hintText: "Enter Person Name",
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.black, width: 1),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.black, width: 2),
+                                  ),
+                                  border: OutlineInputBorder(),
+                                  label: Text(
+                                    "Name",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  prefixIcon: Icon(
+                                    Icons.person,
+                                    size: 20,
+                                    color: Colors.black,
+                                  )),
+                              validator: (value) {
+                                {
+                                  if (value!.isEmpty) {
+                                    return "Enter Person Name";
+                                  } else {
+                                    return null;
+                                  }
+                                }
+                              },
+                            ),
+                            H(40),
+                            TextFormField(
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                maxLength: 10,
+                                controller: txt_Num,
+                                decoration: InputDecoration(
+                                    hintText: "Enter Mobile Number",
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 1),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 2),
+                                    ),
+                                    border: OutlineInputBorder(),
+                                    label: Text(
+                                      "Mobile No",
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                    prefixIcon: Icon(
+                                      Icons.mobile_friendly,
+                                      size: 20,
+                                      color: Colors.black,
+                                    )),
+                                validator: (value) {
+                                  {
+                                    if (value!.isEmpty) {
+                                      return "Enter Contact Number";
+                                    } else {
+                                      return null;
+                                    }
+                                  }
+                                }),
+                            H(40),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context, '/');
+                                  },
+                                  child: Text("back"),
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Colors.black),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    if (keys.currentState!.validate()) {
+                                      Navigator.pop(context, '/');
+                                    }
+                                    setState(() {
+
+                                    next();
+                                    });
+
+                                    txt_Name.clear();
+                                    txt_Num.clear();
+                                  },
+                                  child: Text("Next"),
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Colors.black),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      backgroundColor: Colors.white,
                     ),
-                    content: Column(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceEvenly,
-                      children: [
-                        GestureDetector(
-                          onTap: () async {
-                            XFile? photo =
-                            await imagepick.pickImage(
-                                source: ImageSource
-                                    .gallery);
-                            setState(() {
-                              path = photo!.path as File;
-                            });
-                          },
-                          child: Container(
-                            height: 85,
-                            width: 85,
-                            child: CircleAvatar(
-                              backgroundImage:
-                              FileImage(path),
+                  );
+                });
+          },
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        body: Form(
+          key: ke,
+          child: Container(
+            child: Column(
+              children: [
+                ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: Name.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        child: Container(
+                          height: 80,
+                          color: Colors.black,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                    height: 60,
+                                    width: 60,
+                                    child: CircleAvatar(
+                                      backgroundImage: FileImage(new_path),
+                                    ),),
+                                Text("${Name[index]}",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                Text("${Number[index]}",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                        TextFormField(
-                          controller: txt_Name,
-                          decoration: InputDecoration(
-                              hintText: "Enter Person Name",
-                              enabledBorder:
-                              OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors.black,
-                                    width: 1),
-                              ),
-                              focusedBorder:
-                              OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors.black,
-                                    width: 2),
-                              ),
-                              border: OutlineInputBorder(),
-                              label: Text(
-                                "Name",
-                                style: TextStyle(
-                                    color: Colors.black),
-                              ),
-                              prefixIcon: Icon(
-                                Icons.person,
-                                size: 20,
-                                color: Colors.black,
-                              )),
-                        ),
-                        TextFormField(
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                          maxLength: 10,
-                          controller: txt_Num,
-                          decoration: InputDecoration(
-
-                              hintText:
-                              "Enter Mobile Number",
-                              enabledBorder:
-                              OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors.black,
-                                    width: 1),
-                              ),
-                              focusedBorder:
-                              OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors.black,
-                                    width: 2),
-                              ),
-                              border: OutlineInputBorder(),
-                              label: Text(
-                                "Mobile No",
-                                style: TextStyle(
-                                    color: Colors.black),
-                              ),
-                              prefixIcon: Icon(
-                                Icons.mobile_friendly,
-                                size: 20,
-                                color: Colors.black,
-                              )),
-                        ),
-                        H(10),
-                        Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            ElevatedButton(onPressed: (){
-                              Navigator.pop(context,'/');
-                            }, child: Text("back"),style: ElevatedButton.styleFrom(primary: Colors.black),),
-                            ElevatedButton(onPressed: (){
-                              Name = txt_Name.text;
-                              Number = txt_Num.text;
-                              Navigator.pop(context,'/');
-                            }, child: Text("Next"),style: ElevatedButton.styleFrom(primary: Colors.black),),
-                          ],
-                        ),
-                      ],
-                    ),
-                    backgroundColor: Colors.white,
-                  ),
-                );
-              });
-        },),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        body: Form(
-          key: keys,
-          child: Container(
-            child: Column(children: [
-              ListView.builder(
-                shrinkWrap: true, // and use shrinkWrap
-                itemCount: Name?.length,
-                padding: EdgeInsets.only(top: 10, bottom: 10),
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: Container(
-                      height: 70,
-                      color: Colors.black,
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                  height: 50,
-                                  width: 50,
-                                  child: CircleAvatar()),
-                            ),
-
-                            Text('$Name',style: GoogleFonts.poppins(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 20),),
-                            Text('$Number',style: GoogleFonts.poppins(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 20),),
-                          ]),
-                    ),
-                  );
-                },
-              ),
-            ],
+                      );
+                    })
+              ],
             ),
+          ),
+        ),
       ),
-    ),
-   ),
     );
-   }
+  }
+  void next()
+  {
+    setState(() {
+   Name.insert(0, txt_Name.text);
+   Number.insert(0, txt_Num.text);
+   new_path = File(path.path);
+    });
+  }
 }
